@@ -63,12 +63,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CancelationCommand.cs" />
     <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\ConfirmationCommand.cs" />
+    <Compile Include="Commands\DefaultCommand.cs" />
     <Compile Include="Commands\HelloComand.cs" />
     <Compile Include="Commands\IntroductionCommand.cs" />
+    <Compile Include="Commands\MakeOrder\ForHowManyPersonsOrderCommand.cs" />
+    <Compile Include="Commands\MakeOrder\ForWhatPeriodMakeOrderCommand.cs" />
+    <Compile Include="Commands\MakeOrder\WhatToOrderCommand.cs" />
     <Compile Include="Helpers\BotHelper.cs" />
     <Compile Include="Helpers\LuisHelper.cs" />
     <Compile Include="Models\IntroductionModel.cs" />
+    <Compile Include="Models\TopIntentDataModel.cs" />
     <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="Settings\AppSettingsLuis.cs" />
     <Compile Include="Program.cs" />

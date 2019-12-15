@@ -1,17 +1,18 @@
-﻿using Hotel_Management_Bot_Console.Helpers;
-using Microsoft.Azure.CognitiveServices.Language.LUIS.Runtime.Models;
+﻿using Microsoft.Azure.CognitiveServices.Language.LUIS.Runtime.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace Hotel_Management_Bot_Console.Commands
+namespace Hotel_Management_Bot_Console.Commands.MakeOrder
 {
-    class IntroductionCommand : Command
+    class ForHowManyPersonsOrderCommand : Command
     {
-        public override string Name => "Introduction";
+        public override string Name => "Make Order Second Step";
 
         public override async void Execute(Message message, PredictionResponse luisResult, TelegramBotClient client)
         {
@@ -21,8 +22,9 @@ namespace Hotel_Management_Bot_Console.Commands
 
             try
             {
-                var personName = JsonConvert.DeserializeObject<List<string>>(string.Format("{0}", luisResult.Prediction.Entities["personName"]));
-                responseMessage = $"Hi {personName.FirstOrDefault()}, How can I help you?";
+                var peopleNumber = JsonConvert.DeserializeObject<List<string>>(string.Format("{0}", luisResult.Prediction.Entities["numberOfPeople"]));
+                //Save people number to DB.
+                responseMessage = $"For what period are you going to make reservation?";
             }
             catch (Exception)
             {
