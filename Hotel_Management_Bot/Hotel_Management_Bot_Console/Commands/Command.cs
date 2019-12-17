@@ -1,4 +1,5 @@
-﻿using Telegram.Bot;
+﻿using Microsoft.Azure.CognitiveServices.Language.LUIS.Runtime.Models;
+using Telegram.Bot;
 using Telegram.Bot.Types;
 
 namespace Hotel_Management_Bot_Console.Commands
@@ -7,11 +8,14 @@ namespace Hotel_Management_Bot_Console.Commands
     {
         public abstract string Name { get; }
 
-        public abstract void Execute(Message message, TelegramBotClient client);
+        public abstract void Execute(Message message, PredictionResponse luisResult, TelegramBotClient client);
 
         public bool Contains(string command)
         {
-            return command.Contains(this.Name);
+            if (!string.IsNullOrEmpty(command))
+                return command.Contains(this.Name);
+            else
+                return false;
         }
     }
 }

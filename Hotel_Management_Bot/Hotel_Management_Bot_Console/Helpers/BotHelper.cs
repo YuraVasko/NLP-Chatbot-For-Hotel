@@ -1,4 +1,5 @@
 ﻿using Hotel_Management_Bot_Console.Commands;
+using Hotel_Management_Bot_Console.Commands.MakeOrder;
 using Hotel_Management_Bot_Console.Settings;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,13 +28,19 @@ namespace Hotel_Management_Bot_Console.Helpers
             {
 
                 var message = args.Message.Text;
-
-                // could use here LUIS instead of Contains
-                var command = commandList.FirstOrDefault(c => c.Contains(message));
-                if (command != null)
+                if(!string.IsNullOrEmpty(message))
                 {
-                    command.Execute(args.Message, client);
-                };
+                    var prediction = LuisHelper.GetPredictionAsync(message).Result;
+                    var intentName = prediction.Prediction.TopIntent;
+                    Command command = commandList.FirstOrDefault(c => c.Name.ToLower() == intentName.ToLower());
+
+                    if(command == null)
+                    {
+                        command = commandList.FirstOrDefault(c => c is DefaultCommand);
+                    }
+
+                    command.Execute(args.Message, prediction, client);
+                }     
             };
 
             return client;
@@ -42,8 +49,14 @@ namespace Hotel_Management_Bot_Console.Helpers
         private static void PopulateCommands()
         {
             commandList = new List<Command>();
+            commandList.Add(new DefaultCommand());
             commandList.Add(new HelloComand());
             commandList.Add(new IntroductionCommand());
+            commandList.Add(new WhatToOrderCommand());
+            commandList.Add(new ForHowManyPersonsOrderCommand());
+            commandList.Add(new ForWhatPeriodMakeOrderCommand());
+            commandList.Add(new CancelationCommand());
+            commandList.Add(new ConfirmationCommand());
         }
     }
 }
