@@ -8,6 +8,7 @@ namespace Hotel_Management_Bot_Console.Commands
 {
     public class HelloComand : Command
     {
+        public HelloComand(Action<string> logFunction) : base(logFunction) { }
         public override string Name => "Greetings";
 
         public override async void Execute(Message message, PredictionResponse luisResult, TelegramBotClient client)
@@ -17,7 +18,7 @@ namespace Hotel_Management_Bot_Console.Commands
             string responseMessage = "Hi! What is your name?";
 
             await client.SendTextMessageAsync(chatId, responseMessage, replyToMessageId: messageId);
-            Console.WriteLine($"Sent message to chat with Id = { chatId }: {responseMessage}");
+            _logFunction($"Sent message to chat with Id = { chatId }: {responseMessage}");
         }
     }
 }

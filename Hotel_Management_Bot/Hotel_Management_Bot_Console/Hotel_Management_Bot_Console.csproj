@@ -73,7 +73,10 @@
     <Compile Include="Commands\MakeOrder\ForWhatPeriodMakeOrderCommand.cs" />
     <Compile Include="Commands\MakeOrder\WhatToOrderCommand.cs" />
     <Compile Include="Helpers\BotHelper.cs" />
+    <Compile Include="Helpers\ConsoleLogHelper.cs" />
     <Compile Include="Helpers\LuisHelper.cs" />
+    <Compile Include="Helpers\MaybeMonadHelper.cs" />
+    <Compile Include="Helpers\TryCatchMonadHelper.cs" />
     <Compile Include="Models\IntroductionModel.cs" />
     <Compile Include="Models\TopIntentDataModel.cs" />
     <Compile Include="Settings\AppSettings.cs" />

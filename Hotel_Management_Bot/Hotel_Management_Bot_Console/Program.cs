@@ -12,11 +12,11 @@ namespace Hotel_Management_Bot_Console
         {
             try
             {
-                Console.WriteLine("Bot is running");
+                ConsoleLogHelper.Log("Bot is running");
                 clientBot = await BotHelper.GetBotClient();
                 clientBot.StartReceiving();
 
-                Console.WriteLine("Type something to stop bot.");
+                ConsoleLogHelper.Log("Type something to stop bot.");
                 Console.ReadLine();
                 clientBot.StopReceiving();
             }
@@ -24,7 +24,7 @@ namespace Hotel_Management_Bot_Console
             {
                 clientBot.StopReceiving();
             }
-            Console.WriteLine("Bot has been stopped running");
+            ConsoleLogHelper.Log("Bot has been stopped running");
 
         }
     }

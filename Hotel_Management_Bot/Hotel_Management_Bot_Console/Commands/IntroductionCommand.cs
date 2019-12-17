@@ -12,6 +12,7 @@ namespace Hotel_Management_Bot_Console.Commands
     class IntroductionCommand : Command
     {
         public override string Name => "Introduction";
+        public IntroductionCommand(Action<string> logFunction) : base(logFunction) { }
 
         public override async void Execute(Message message, PredictionResponse luisResult, TelegramBotClient client)
         {
@@ -19,17 +20,18 @@ namespace Hotel_Management_Bot_Console.Commands
             var messageId = message.MessageId;
             string responseMessage = string.Empty;
 
-            try
+            luisResult.Try(res => 
             {
-                var personName = JsonConvert.DeserializeObject<List<string>>(string.Format("{0}", luisResult.Prediction.Entities["personName"]));
-                responseMessage = $"Hi {personName.FirstOrDefault()}, How can I help you?";
-            }
-            catch (Exception)
-            {
-                responseMessage = $"Sorry, error has been occured";
-            }
+                var personName = JsonConvert.DeserializeObject<List<string>>(string.Format("{0}", res.With(r=>r.Prediction).With(p=>p.Entities["personName"])));
+                responseMessage = $"Hi {personName.FirstOrDefault()}, How can I help you? Here you could book roo, SPA or restaurant!";
+            }, 
+            res => 
+            { 
+                responseMessage = $"I do not get you. Could you please repeat?"; 
+            });
+
             await client.SendTextMessageAsync(chatId, responseMessage, replyToMessageId: messageId);
-            Console.WriteLine($"Sent message to chat with Id = { chatId }: {responseMessage}");
+            _logFunction($"Sent message to chat with Id = { chatId }: {responseMessage}");
         }
     }
 }

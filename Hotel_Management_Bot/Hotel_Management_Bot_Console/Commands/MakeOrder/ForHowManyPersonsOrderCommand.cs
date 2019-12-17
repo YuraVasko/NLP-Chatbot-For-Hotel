@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.CognitiveServices.Language.LUIS.Runtime.Models;
+﻿using Hotel_Management_Bot_Console.Helpers;
+using Microsoft.Azure.CognitiveServices.Language.LUIS.Runtime.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace Hotel_Management_Bot_Console.Commands.MakeOrder
 {
     class ForHowManyPersonsOrderCommand : Command
     {
+        public ForHowManyPersonsOrderCommand(Action<string> logFunction) : base(logFunction) { }
         public override string Name => "Make Order Second Step";
 
         public override async void Execute(Message message, PredictionResponse luisResult, TelegramBotClient client)
@@ -19,19 +21,20 @@ namespace Hotel_Management_Bot_Console.Commands.MakeOrder
             var chatId = message.Chat.Id;
             var messageId = message.MessageId;
             string responseMessage = string.Empty;
+            string numberOfPeopleKey = "numberOfPeople";
 
-            try
+            luisResult.Try(res =>
             {
-                var peopleNumber = JsonConvert.DeserializeObject<List<string>>(string.Format("{0}", luisResult.Prediction.Entities["numberOfPeople"]));
-                //Save people number to DB.
+                var peopleNumber = JsonConvert.DeserializeObject<List<string>>(string.Format("{0}", res.With(r => r.Prediction).With(p => p.Entities[numberOfPeopleKey])));
                 responseMessage = $"For what period are you going to make reservation?";
-            }
-            catch (Exception)
+            },
+            res =>
             {
-                responseMessage = $"Sorry, error has been occured";
-            }
+                responseMessage = $"I do not get you. Could you please repeat?";
+            });
+
             await client.SendTextMessageAsync(chatId, responseMessage, replyToMessageId: messageId);
-            Console.WriteLine($"Sent message to chat with Id = { chatId }: {responseMessage}");
+            _logFunction($"Sent message to chat with Id = { chatId }: {responseMessage}");
         }
     }
 }

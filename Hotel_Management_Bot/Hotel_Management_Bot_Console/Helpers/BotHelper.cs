@@ -1,6 +1,7 @@
 ﻿using Hotel_Management_Bot_Console.Commands;
 using Hotel_Management_Bot_Console.Commands.MakeOrder;
 using Hotel_Management_Bot_Console.Settings;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,12 +17,25 @@ namespace Hotel_Management_Bot_Console.Helpers
 
         public static async Task<TelegramBotClient> GetBotClient()
         {
+            Action initializeCommands = delegate ()
+            {
+                commandList = new List<Command>();
+                commandList.Add(new DefaultCommand(ConsoleLogHelper.Log));
+                commandList.Add(new HelloComand(ConsoleLogHelper.Log));
+                commandList.Add(new IntroductionCommand(ConsoleLogHelper.Log));
+                commandList.Add(new WhatToOrderCommand(ConsoleLogHelper.Log));
+                commandList.Add(new ForHowManyPersonsOrderCommand(ConsoleLogHelper.Log));
+                commandList.Add(new ForWhatPeriodMakeOrderCommand(ConsoleLogHelper.Log));
+                commandList.Add(new CancelationCommand(ConsoleLogHelper.Log));
+                commandList.Add(new ConfirmationCommand(ConsoleLogHelper.Log));
+            };
+
             if (client != null)
             {
                 return client;
             }
 
-            PopulateCommands();
+            initializeCommands();
 
             client = new TelegramBotClient(AppSettings.Key);
             client.OnMessage += delegate (object sender, MessageEventArgs args)
@@ -44,19 +58,6 @@ namespace Hotel_Management_Bot_Console.Helpers
             };
 
             return client;
-        }
-
-        private static void PopulateCommands()
-        {
-            commandList = new List<Command>();
-            commandList.Add(new DefaultCommand());
-            commandList.Add(new HelloComand());
-            commandList.Add(new IntroductionCommand());
-            commandList.Add(new WhatToOrderCommand());
-            commandList.Add(new ForHowManyPersonsOrderCommand());
-            commandList.Add(new ForWhatPeriodMakeOrderCommand());
-            commandList.Add(new CancelationCommand());
-            commandList.Add(new ConfirmationCommand());
         }
     }
 }

@@ -7,6 +7,7 @@ namespace Hotel_Management_Bot_Console.Commands
 {
     class ConfirmationCommand : Command
     {
+        public ConfirmationCommand(Action<string> logFunction) : base(logFunction) { }
         public override string Name => "Confirmation";
 
         public override async void Execute(Message message, PredictionResponse luisResult, TelegramBotClient client)
@@ -16,7 +17,7 @@ namespace Hotel_Management_Bot_Console.Commands
             string responseMessage = "Great! Your action has been successfully done. Anything else?";
 
             await client.SendTextMessageAsync(chatId, responseMessage, replyToMessageId: messageId);
-            Console.WriteLine($"Sent message to chat with Id = { chatId }: {responseMessage}");
+            _logFunction($"Sent message to chat with Id = { chatId }: {responseMessage}");
         }
     }
 }

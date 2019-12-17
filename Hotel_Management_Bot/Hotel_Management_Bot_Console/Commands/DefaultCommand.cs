@@ -11,6 +11,7 @@ namespace Hotel_Management_Bot_Console.Commands
 {
     class DefaultCommand : Command
     {
+        public DefaultCommand(Action<string> logFunction) : base(logFunction) { }
         public override string Name => "default";
 
         public override async void Execute(Message message, PredictionResponse luisResult, TelegramBotClient client)
@@ -20,7 +21,7 @@ namespace Hotel_Management_Bot_Console.Commands
             string responseMessage = "I have not get you. Please try again.";
 
             await client.SendTextMessageAsync(chatId, responseMessage, replyToMessageId: messageId);
-            Console.WriteLine($"Sent message to chat with Id = { chatId }: {responseMessage}");
+            _logFunction($"Sent message to chat with Id = { chatId }: {responseMessage}");
         }
     }
 }
